@@ -1,0 +1,124 @@
+🎯 15-Day Mini SIEM Roadmap
+🟢 PHASE 1 — Core Backend (Days 1–5)
+✅ Day 1
+
+Setup project structure
+
+Create Python backend
+
+Read sample log file
+
+✅ Day 2
+
+Parse logs properly (IP, timestamp, status)
+
+Detect failed login attempts
+
+✅ Day 3
+
+Add alert logic (5 failed attempts = alert)
+
+Add severity tagging
+
+✅ Day 4
+
+Integrate database
+
+Use MongoDB Community Server
+OR
+
+SQLite
+
+Store logs + alerts.
+
+✅ Day 5
+
+Build simple API using Flask
+
+Create endpoints:
+
+/logs
+
+/alerts
+
+At this stage → You have backend SIEM core.
+[PHASE 1 is completed....-14/02/2026]
+
+🟡 PHASE 2 — Linux + Real Logs (Days 6–7)
+✅ Day 6
+
+Install VirtualBox
+
+Install Ubuntu
+
+✅ Day 7
+
+Monitor /var/log/auth.log
+
+Detect real failed SSH attempts
+
+Now your project becomes realistic.
+[PHASE 2 is completed....-15/02/2026]
+
+🔵 PHASE 3 — Frontend Dashboard (Days 8–11)
+✅ Day 8
+
+Setup React using Node.js
+
+Create basic layout
+
+✅ Day 9
+
+Connect React to backend API
+
+Show logs table
+
+✅ Day 10
+
+Show alerts section
+
+Add severity badges (Low/Medium/High)
+
+✅ Day 11
+
+Add charts (failed logins graph)
+
+Clean UI
+
+Now it looks like a SOC dashboard 🔥
+
+🟣 PHASE 4 — ML Layer (Days 12–13)
+✅ Day 12
+
+Add Isolation Forest (scikit-learn)
+
+Train on login frequency
+
+✅ Day 13
+
+Detect anomalies
+
+Mark suspicious activity in dashboard
+
+Now it becomes advanced-level project.
+
+🟠 PHASE 5 — Polish & Interview Prep (Days 14–15)
+✅ Day 14
+
+Add README properly
+
+Add screenshots
+
+Document architecture
+
+✅ Day 15
+
+Prepare explanation:
+
+What is SIEM?
+
+How your system works?
+
+Why anomaly detection?
+
+Now you're interview ready.
