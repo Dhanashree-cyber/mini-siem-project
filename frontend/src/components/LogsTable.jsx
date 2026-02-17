@@ -1,11 +1,24 @@
-function LogsTable() {
-  return (
-    <div style={{ margin: "40px" }}>
-      <h2 style={{ color: "#38bdf8" }}>Recent Logs</h2>
+import { useEffect, useState } from "react";
 
-      <table style={{ width: "100%", marginTop: "20px", borderCollapse: "collapse" }}>
+function LogsTable() {
+  const [logs, setLogs] = useState([]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:5000/logs")
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setLogs(data);
+      })
+      .catch((err) => console.error(err));
+  }, []);
+
+  return (
+    <div>
+      <h2>Recent Logs</h2>
+      <table>
         <thead>
-          <tr style={{ backgroundColor: "#1e293b" }}>
+          <tr>
             <th>Timestamp</th>
             <th>Source IP</th>
             <th>Event</th>
@@ -13,18 +26,16 @@ function LogsTable() {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>10:45:23</td>
-            <td>192.168.1.10</td>
-            <td>Login Attempt</td>
-            <td style={{ color: "red" }}>Failed</td>
-          </tr>
-          <tr>
-            <td>10:50:11</td>
-            <td>192.168.1.15</td>
-            <td>File Access</td>
-            <td style={{ color: "green" }}>Success</td>
-          </tr>
+          {logs.map((log, index) => (
+            <tr key={index}>
+              <td>{log.time}</td>
+              <td>{log.ip}</td>
+              <td>{log.event}</td>
+              <td style={{ color: log.status === "Failed" ? "red" : "green" }}>
+                {log.status}
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>
