@@ -1,8 +1,10 @@
 import re
 import sqlite3
 from flask import Flask, jsonify
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 
 DATABASE = "siem.db"
 

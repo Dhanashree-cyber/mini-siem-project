@@ -7,10 +7,10 @@ function LogsTable() {
     fetch("http://127.0.0.1:5000/logs")
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("API DATA:", data);   // 🔥 ADD THIS LINE
         setLogs(data);
       })
-      .catch((err) => console.error(err));
+      .catch((err) => console.error("Error:", err));
   }, []);
 
   return (
@@ -19,19 +19,19 @@ function LogsTable() {
       <table>
         <thead>
           <tr>
-            <th>Timestamp</th>
+            <th>ID</th>
             <th>Source IP</th>
             <th>Event</th>
             <th>Status</th>
           </tr>
         </thead>
         <tbody>
-          {logs.map((log, index) => (
-            <tr key={index}>
-              <td>{log.time}</td>
+          {logs.map((log) => (
+            <tr key={log.id}>
+              <td>{log.id}</td>
               <td>{log.ip}</td>
-              <td>{log.event}</td>
-              <td style={{ color: log.status === "Failed" ? "red" : "green" }}>
+              <td>Login Attempt</td>
+              <td style={{ color: log.status === "FAILED" ? "red" : "green" }}>
                 {log.status}
               </td>
             </tr>
