@@ -6,28 +6,48 @@ body {
   color: white;
 }
 
-/* ===== Centered Layout Wrapper ===== */
+/* ===== Main Layout Wrapper ===== */
 .dashboard-container {
-  max-width: 2225px;
+  max-width: 1400px;
   width: 100%;
   margin: 0 auto;
   padding: 40px 20px;
+  text-align: center;
 }
 
-/* ===== Header ===== */
+/* ===== Header (Title + Nav) ===== */
 .header {
-  background-color: #1e293b;
-  padding: 25px;
-  text-align: center;
-  border-radius: 12px;
-  margin-bottom: 40px;
-  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4);
+  margin-bottom: 50px;
 }
 
 .header h1 {
-  margin: 0;
-  font-size: 32px;
+  font-size: 36px;
   letter-spacing: 1px;
+  margin-bottom: 25px;
+}
+
+/* ===== Navigation ===== */
+.header nav {
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+}
+
+.nav-link {
+  text-decoration: none;
+  color: white;
+  font-size: 18px;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+.nav-link:hover {
+  color: #38bdf8;
+}
+
+/* ===== Page Content Alignment ===== */
+.page-content {
+  text-align: left;
 }
 
 /* ===== Stats Cards ===== */
@@ -85,12 +105,12 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 15px;
+  text-align: center;
 }
 
 th, td {
   border: 1px solid #334155;
   padding: 10px;
-  text-align: center;
 }
 
 th {
@@ -126,7 +146,7 @@ tr:hover {
   color: white;
 }
 
-/* ===== Charts Layout (50-50 PERFECT) ===== */
+/* ===== Charts Layout ===== */
 .chart-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -134,7 +154,6 @@ tr:hover {
   margin-bottom: 60px;
 }
 
-/* Chart Card */
 .chart-card {
   background: #12243c;
   padding: 25px;
@@ -145,7 +164,6 @@ tr:hover {
   flex-direction: column;
 }
 
-/* Chart Container MUST BE 100% */
 .chart-container {
   flex: 1;
   width: 100%;
@@ -154,10 +172,7 @@ tr:hover {
 
 /* ===== Responsive ===== */
 @media (max-width: 992px) {
-  .table-row {
-    grid-template-columns: 1fr;
-  }
-
+  .table-row,
   .chart-row {
     grid-template-columns: 1fr;
   }
