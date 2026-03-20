@@ -1,7 +1,7 @@
-import re
 import sqlite3
-from flask import Flask, jsonify
+from flask import Flask, jsonify, request
 from flask_cors import CORS
+from ml_model import predict_attack
 
 app = Flask(__name__)
 CORS(app)
@@ -10,7 +10,7 @@ DATABASE = "siem.db"
 
 
 # -------------------------
-# Function to initialize DB
+# Init DB
 # -------------------------
 def init_db():
     conn = sqlite3.connect(DATABASE)
@@ -27,10 +27,10 @@ def init_db():
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS alerts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        ip TEXT,
+        ip TEXT UNIQUE,
         attempts INTEGER,
         severity TEXT
-    )
+        )
     """)
 
     conn.commit()
@@ -38,7 +38,50 @@ def init_db():
 
 
 # -------------------------
-# Endpoint: /logs
+# ADD LOG
+# -------------------------
+@app.route("/add-log", methods=["POST"])
+def add_log():
+    data = request.json
+    ip = data.get("ip")
+    status = data.get("status")
+
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    # Insert log
+    cursor.execute(
+        "INSERT INTO logs (ip, status) VALUES (?, ?)",
+        (ip, status)
+    )
+
+    # Count failed attempts
+    cursor.execute(
+        "SELECT COUNT(*) FROM logs WHERE ip=? AND status='FAILED'",
+        (ip,)
+    )
+
+    attempts = cursor.fetchone()[0]
+
+    prediction = predict_attack(attempts)
+
+    print(f"IP: {ip}, Attempts: {attempts}, Prediction: {prediction}")
+
+    if attempts >= 5:
+        severity = "HIGH"
+
+        cursor.execute("""
+        INSERT OR REPLACE INTO alerts (ip, attempts, severity)
+        VALUES (?, ?, ?)
+        """, (ip, attempts, severity))
+
+    conn.commit()
+    conn.close()
+
+    return jsonify({"message": "Log added successfully"})
+
+# -------------------------
+# GET LOGS
 # -------------------------
 @app.route("/logs", methods=["GET"])
 def get_logs():
@@ -50,19 +93,14 @@ def get_logs():
 
     conn.close()
 
-    logs = []
-    for row in rows:
-        logs.append({
-            "id": row[0],
-            "ip": row[1],
-            "status": row[2]
-        })
-
-    return jsonify(logs)
+    return jsonify([
+        {"id": r[0], "ip": r[1], "status": r[2]}
+        for r in rows
+    ])
 
 
 # -------------------------
-# Endpoint: /alerts
+# GET ALERTS
 # -------------------------
 @app.route("/alerts", methods=["GET"])
 def get_alerts():
@@ -74,16 +112,10 @@ def get_alerts():
 
     conn.close()
 
-    alerts = []
-    for row in rows:
-        alerts.append({
-            "id": row[0],
-            "ip": row[1],
-            "attempts": row[2],
-            "severity": row[3]
-        })
-
-    return jsonify(alerts)
+    return jsonify([
+        {"id": r[0], "ip": r[1], "attempts": r[2], "severity": r[3]}
+        for r in rows
+    ])
 
 
 if __name__ == "__main__":

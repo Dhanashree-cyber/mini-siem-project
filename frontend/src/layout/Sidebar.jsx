@@ -14,3 +14,7 @@ const navItems = [
     <span className="text">{item.name}</span>
   </NavLink>
 ))}
+
+<li>
+  <Link to="/create-log">Create Log</Link>
+</li>

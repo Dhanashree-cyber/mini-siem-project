@@ -4,7 +4,7 @@ import Dashboard from "./Pages/Dashboard";
 import Logs from "./Pages/Logs";
 import Alerts from "./Pages/Alerts";
 import Analytics from "./Pages/Analytics";
-
+import CreateLog from "./pages/CreateLog";
 function App() {
   return (
     <Router>
@@ -14,6 +14,7 @@ function App() {
           <Route path="/logs" element={<Logs />} />
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/analytics" element={<Analytics />} />
+          <Route path="/create-log" element={<CreateLog />} />
         </Routes>
       </Layout>
     </Router>

@@ -1,33 +1,41 @@
-import sqlite3
 import re
-conn=sqlite3.connect("linux_siem.db")
-cursor=conn.cursor()
-cursor.execute("""
-create table if not exists ssh_logs(
-id integer primary key autoincrement,
-ip TEXT,
-status TEXT
-)
-""")
-with open("/var/log/auth.log","r")as file:
-    logs=file.readlines()
-for line in logs:
-    if "Failed password" in line:
-        match=re.search(r'from (\d+\.\d+\.\d+\.\d+)',line)
-        if match:
-            ip=match.group(1)
-            cursor.execute("insert into ssh_logs(ip,status)values(?,?)",(ip,"Failed"))
-conn.commit()
-conn.close()
-print("Logs inserted successfully...")
-cursor=sqlite3.connect("linux_siem.db").cursor()
-cursor.execute("""
-select ip,count(*) as attempts
-from ssh_logs
-group by ip
-order by attempts DESC
-limit 1
-""")
-top_attacker=cursor.fetchone()
-if top_attacker:
-    print(f"TOP ATTACKER IP:{top_attacker[0]} with {top_attacker[1]} attempts")
+import requests
+import time
+
+LOG_FILE = "sample_logs.txt"
+API_URL = "http://127.0.0.1:5000/add-log"
+
+last_position = 0
+
+
+def process_logs():
+    global last_position
+
+    with open(LOG_FILE, "r") as file:
+        file.seek(last_position)
+
+        for line in file:
+            if "Failed password" in line:
+                match = re.search(r'from (\d+\.\d+\.\d+\.\d+)', line)
+
+                if match:
+                    ip = match.group(1)
+
+                    data = {
+                        "ip": ip,
+                        "status": "FAILED"
+                    }
+
+                    try:
+                        response = requests.post(API_URL, json=data)
+                        print(f"Sent log for IP: {ip}, Response: {response.status_code}")
+                    except Exception as e:
+                        print("Error:", e)
+
+        last_position = file.tell()
+
+
+if __name__ == "__main__":
+    while True:
+        process_logs()
+        time.sleep(5)

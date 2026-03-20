@@ -15,15 +15,15 @@ body {
   text-align: center;
 }
 
-/* ===== Header (Title + Nav) ===== */
+/* ===== Header ===== */
 .header {
-  margin-bottom: 50px;
+  margin-bottom: 40px;
 }
 
 .header h1 {
-  font-size: 36px;
+  font-size: 60px;
   letter-spacing: 1px;
-  margin-bottom: 25px;
+  margin-bottom: 10px;
 }
 
 /* ===== Navigation ===== */
@@ -36,7 +36,7 @@ body {
 .nav-link {
   text-decoration: none;
   color: white;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 500;
   transition: 0.3s ease;
 }
@@ -45,7 +45,7 @@ body {
   color: #38bdf8;
 }
 
-/* ===== Page Content Alignment ===== */
+/* ===== Page Content ===== */
 .page-content {
   text-align: left;
 }
@@ -76,15 +76,15 @@ body {
 .card h2 {
   margin-bottom: 12px;
   color: #38bdf8;
-  font-size: 20px;
+  font-size: 22px;
 }
 
 .card p {
-  font-size: 22px;
+  font-size: 24px;
   font-weight: bold;
 }
 
-/* ===== Tables Layout (50-50) ===== */
+/* ===== Tables Layout ===== */
 .table-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -92,7 +92,6 @@ body {
   margin-bottom: 60px;
 }
 
-/* ===== Table Card Styling ===== */
 .table-card {
   background: #12243c;
   padding: 25px;
@@ -100,7 +99,7 @@ body {
   box-shadow: 0 8px 20px rgba(0,0,0,0.4);
 }
 
-/* ===== Tables Styling ===== */
+/* ===== Tables ===== */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -110,7 +109,8 @@ table {
 
 th, td {
   border: 1px solid #334155;
-  padding: 10px;
+  padding: 12px;
+  font-size: 16px;
 }
 
 th {
@@ -127,13 +127,12 @@ tr:hover {
   padding: 6px 12px;
   border-radius: 8px;
   font-weight: bold;
-  font-size: 13px;
+  font-size: 14px;
   display: inline-block;
 }
 
 .severity.low {
   background-color: #2ecc71;
-  color: white;
 }
 
 .severity.medium {
@@ -143,10 +142,9 @@ tr:hover {
 
 .severity.high {
   background-color: #e74c3c;
-  color: white;
 }
 
-/* ===== Charts Layout ===== */
+/* ===== Charts ===== */
 .chart-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -170,8 +168,88 @@ tr:hover {
   height: 100%;
 }
 
+/* ===== Create Log Page ===== */
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.page-title {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+
+.page-subtitle {
+  font-size: 28px;
+  color: #38bdf8;
+  margin-bottom: 50px;
+}
+
+/* ===== Form Card ===== */
+
+.log-card {
+  background: #16263a;
+  padding: 40px;
+  border-radius: 14px;
+  width: 420px;
+
+  /* Border + glow */
+  border: 2px solid #38bdf8;
+  box-shadow: 0 0 25px rgba(56,189,248,0.4);
+
+  text-align: left;
+}
+
+/* ===== Form Fields ===== */
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  font-size: 18px;
+  margin-bottom: 6px;
+  color: #cfd8dc;
+}
+
+.form-group input,
+.form-group select {
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 6px;
+  border: none;
+  outline: none;
+}
+
+/* ===== Button ===== */
+
+.log-btn {
+  width: 100%;
+  padding: 14px;
+  font-size: 18px;
+  background: #00bcd4;
+  border: none;
+  border-radius: 8px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.log-btn:hover {
+  background: #0097a7;
+  transform: scale(1.05);
+}
+
 /* ===== Responsive ===== */
 @media (max-width: 992px) {
+
   .table-row,
   .chart-row {
     grid-template-columns: 1fr;
@@ -181,4 +259,5 @@ tr:hover {
     flex-direction: column;
     align-items: center;
   }
+
 }
