@@ -1,7 +1,6 @@
 import sqlite3
 from flask import Flask, jsonify, request
 from flask_cors import CORS
-from ml_model import predict_attack
 
 app = Flask(__name__)
 CORS(app)
@@ -16,21 +15,33 @@ def init_db():
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
+    # Logs table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS logs (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
+        message TEXT,
         ip TEXT,
         status TEXT
     )
     """)
 
+    # Alerts table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS alerts (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        ip TEXT UNIQUE,
-        attempts INTEGER,
+        message TEXT,
         severity TEXT
-        )
+    )
+    """)
+
+    # Anomalies table
+    cursor.execute("""
+    CREATE TABLE IF NOT EXISTS anomalies (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip TEXT,
+        status TEXT,
+        risk_level TEXT
+    )
     """)
 
     conn.commit()
@@ -38,47 +49,43 @@ def init_db():
 
 
 # -------------------------
-# ADD LOG
+# ADD LOG (MAIN LOGIC)
 # -------------------------
-@app.route("/add-log", methods=["POST"])
+@app.route("/logs", methods=["POST"])
 def add_log():
     data = request.json
-    ip = data.get("ip")
-    status = data.get("status")
 
     conn = sqlite3.connect(DATABASE)
     cursor = conn.cursor()
 
     # Insert log
     cursor.execute(
-        "INSERT INTO logs (ip, status) VALUES (?, ?)",
-        (ip, status)
+        "INSERT INTO logs (message, ip, status) VALUES (?, ?, ?)",
+        (data["message"], data["ip"], data["status"])
     )
 
-    # Count failed attempts
-    cursor.execute(
-        "SELECT COUNT(*) FROM logs WHERE ip=? AND status='FAILED'",
-        (ip,)
-    )
+    # 🚨 ANOMALY DETECTION
+    if "fail" in data["status"].lower():
 
-    attempts = cursor.fetchone()[0]
+        print("⚠️ Anomaly Detected from IP:", data["ip"])
 
-    prediction = predict_attack(attempts)
+        # Insert anomaly
+        cursor.execute(
+            "INSERT INTO anomalies (ip, status, risk_level) VALUES (?, ?, ?)",
+            (data["ip"], data["status"], "HIGH")
+        )
 
-    print(f"IP: {ip}, Attempts: {attempts}, Prediction: {prediction}")
-
-    if attempts >= 5:
-        severity = "HIGH"
-
-        cursor.execute("""
-        INSERT OR REPLACE INTO alerts (ip, attempts, severity)
-        VALUES (?, ?, ?)
-        """, (ip, attempts, severity))
+        # Insert alert
+        cursor.execute(
+            "INSERT INTO alerts (message, severity) VALUES (?, ?)",
+            (f"Failed login from {data['ip']}", "HIGH")
+        )
 
     conn.commit()
     conn.close()
 
-    return jsonify({"message": "Log added successfully"})
+    return jsonify({"status": "log processed"})
+
 
 # -------------------------
 # GET LOGS
@@ -94,7 +101,12 @@ def get_logs():
     conn.close()
 
     return jsonify([
-        {"id": r[0], "ip": r[1], "status": r[2]}
+        {
+            "id": r[0],
+            "message": r[1],
+            "ip": r[2],
+            "status": r[3]
+        }
         for r in rows
     ])
 
@@ -113,11 +125,42 @@ def get_alerts():
     conn.close()
 
     return jsonify([
-        {"id": r[0], "ip": r[1], "attempts": r[2], "severity": r[3]}
+        {
+            "id": r[0],
+            "message": r[1],
+            "severity": r[2]
+        }
         for r in rows
     ])
 
 
+# -------------------------
+# GET ANOMALIES
+# -------------------------
+@app.route("/anomalies", methods=["GET"])
+def get_anomalies():
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    cursor.execute("SELECT * FROM anomalies")
+    rows = cursor.fetchall()
+
+    conn.close()
+
+    return jsonify([
+        {
+            "id": r[0],
+            "ip": r[1],
+            "status": r[2],
+            "risk_level": r[3]
+        }
+        for r in rows
+    ])
+
+
+# -------------------------
+# RUN APP
+# -------------------------
 if __name__ == "__main__":
     init_db()
     app.run(debug=True)

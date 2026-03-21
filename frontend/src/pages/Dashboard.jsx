@@ -1,8 +1,33 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 function Dashboard() {
+  const [logs, setLogs] = useState([]);
+  const [alerts, setAlerts] = useState([]);
+  const [anomalies, setAnomalies] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const l = await fetch("http://127.0.0.1:5000/logs").then(res => res.json());
+      const a = await fetch("http://127.0.0.1:5000/alerts").then(res => res.json());
+      const an = await fetch("http://127.0.0.1:5000/anomalies").then(res => res.json());
+
+      setLogs(l);
+      setAlerts(a);
+      setAnomalies(an);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+    const interval = setInterval(fetchData, 5000); // auto refresh
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="dashboard-home">
+      
       {/* Hero Section */}
       <section className="hero-section">
         <h1 className="main-heading">Security Monitoring System</h1>
@@ -15,6 +40,24 @@ function Dashboard() {
           </p>
         </div>
       </section>
+
+      {/* 🔥 LIVE STATS */}
+      <div className="info-cards" style={{ marginTop: "40px" }}>
+        <div className="info-card">
+          <h3>Total Logs</h3>
+          <p style={{ fontSize: "24px" }}>{logs.length}</p>
+        </div>
+
+        <div className="info-card">
+          <h3>Alerts</h3>
+          <p style={{ fontSize: "24px", color: "red" }}>{alerts.length}</p>
+        </div>
+
+        <div className="info-card">
+          <h3>Anomalies</h3>
+          <p style={{ fontSize: "24px", color: "orange" }}>{anomalies.length}</p>
+        </div>
+      </div>
 
       {/* Features Grid */}
       <h2 style={{ fontSize: "32px", marginBottom: "30px", color: "#38bdf8" }}>Key Features</h2>
@@ -51,12 +94,12 @@ function Dashboard() {
           </ul>
         </div>
         
-        {/* Placeholder for a future visual or graphic */}
         <div className="chart-card" style={{ display: "flex", alignItems: "center", justifyContent: "center", background: "rgba(56, 189, 248, 0.05)" }}>
           <div style={{ fontSize: "60px" }}>🚀</div>
           <p style={{ marginLeft: "20px", fontSize: "20px" }}>System Ready & Secured</p>
         </div>
       </div>
+
     </div>
   );
 }

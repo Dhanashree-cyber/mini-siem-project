@@ -1,77 +1,70 @@
-import React, { useState } from "react";
+import { useEffect, useState } from "react";
 
-function CreateLog() {
+function Logs() {
+  const [logs, setLogs] = useState([]);
 
-  const [ip, setIp] = useState("");
-  const [event, setEvent] = useState("Login Attempt");
-  const [status, setStatus] = useState("FAILED");
-
-  const generateLog = async () => {
-
-    const logData = { ip, event, status };
-
-    await fetch("http://127.0.0.1:5000/add-log", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(logData),
-    });
-
-    alert("Log Generated!");
-    setIp("");
+  const fetchLogs = async () => {
+    const res = await fetch("http://127.0.0.1:5000/logs");
+    const data = await res.json();
+    setLogs(data);
   };
 
+  useEffect(() => {
+    fetchLogs();
+    const interval = setInterval(fetchLogs, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
   return (
+    <div style={{ padding: "30px" }}>
+      
+      {/* 🔥 Heading like Dashboard */}
+      <h1 style={{ 
+        fontSize: "32px", 
+        marginBottom: "20px", 
+        color: "#38bdf8" 
+      }}>
+        📄 System Logs
+      </h1>
 
-    <div className="dashboard-container">
+      {/* 🔥 Table */}
+      <table 
+        style={{ 
+          width: "100%", 
+          borderCollapse: "collapse",
+          fontSize: "18px"
+        }}
+      >
+        <thead>
+          <tr style={{ background: "#0f172a", color: "white" }}>
+            <th style={{ padding: "12px" }}>ID</th>
+            <th style={{ padding: "12px" }}>IP Address</th>
+            <th style={{ padding: "12px" }}>Status</th>
+          </tr>
+        </thead>
 
-      <div className="header">
-        <h1>Security Monitoring System</h1>
-        <h2 className="page-subtitle">Create Logs</h2>
-      </div>
+        <tbody>
+          {logs.map((log) => (
+            <tr key={log.id} style={{ textAlign: "center" }}>
+              <td style={{ padding: "10px" }}>{log.id}</td>
+              <td style={{ padding: "10px" }}>{log.ip}</td>
 
-      <div className="page-container">
-
-        <div className="log-card">
-
-          <div className="form-group">
-            <label>Source IP</label>
-            <input
-              type="text"
-              placeholder="Enter Source IP"
-              value={ip}
-              onChange={(e) => setIp(e.target.value)}
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Event</label>
-            <select onChange={(e) => setEvent(e.target.value)}>
-              <option>Login Attempt</option>
-              <option>File Access</option>
-              <option>System Change</option>
-            </select>
-          </div>
-
-          <div className="form-group">
-            <label>Status</label>
-            <select onChange={(e) => setStatus(e.target.value)}>
-              <option>FAILED</option>
-              <option>SUCCESS</option>
-            </select>
-          </div>
-
-          <button className="log-btn" onClick={generateLog}>
-            Generate Log
-          </button>
-
-        </div>
-
-      </div>
+              <td
+                style={{
+                  padding: "10px",
+                  fontWeight: "bold",
+                  color: log.status.toLowerCase() === "failed" ? "red" : "limegreen"
+                }}
+              >
+                {log.status}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
     </div>
   );
 }
 
-export default CreateLog;
+export default Logs;

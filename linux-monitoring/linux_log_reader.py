@@ -3,7 +3,7 @@ import requests
 import time
 
 LOG_FILE = "sample_logs.txt"
-API_URL = "http://127.0.0.1:5000/add-log"
+API_URL = "http://127.0.0.1:5000/logs"   # ✅ FIXED
 
 last_position = 0
 
@@ -22,6 +22,7 @@ def process_logs():
                     ip = match.group(1)
 
                     data = {
+                        "message": "SSH Login Attempt",   # ✅ ADDED
                         "ip": ip,
                         "status": "FAILED"
                     }

@@ -1,15 +1,31 @@
+from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.ensemble import IsolationForest
-import numpy as np
 
-def train_model():
-    data = np.array([[1], [2], [3], [4], [5]])
-    model = IsolationForest(contamination=0.2)
-    model.fit(data)
+# Initialize once
+vectorizer = CountVectorizer()
+model = IsolationForest(contamination=0.2)
 
-    return model
+# Train with some basic data (temporary training)
+training_data = [
+    "User login success",
+    "File accessed",
+    "System running normally",
+    "Failed login attempt",
+    "Multiple failed login attempts"
+]
 
-model = train_model()
+X_train = vectorizer.fit_transform(training_data)
+model.fit(X_train)
 
-def predict_attack(attempts):
-    prediction = model.predict([[attempts]])
-    return prediction[0]
+
+def detect_anomaly(logs):
+    # Convert logs → numbers
+    vectorized_logs = vectorizer.transform(logs)
+
+    # Predict
+    prediction = model.predict(vectorized_logs)
+
+    if prediction[0] == -1:
+        return "anomaly"
+    else:
+        return "normal"
