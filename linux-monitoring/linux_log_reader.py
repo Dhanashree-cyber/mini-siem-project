@@ -15,26 +15,34 @@ def process_logs():
         file.seek(last_position)
 
         for line in file:
-            if "Failed password" in line:
-                match = re.search(r'from (\d+\.\d+\.\d+\.\d+)', line)
 
-                if match:
-                    ip = match.group(1)
+            # Extract IP
+            match = re.search(r'from (\d+\.\d+\.\d+\.\d+)', line)
 
-                    data = {
-                        "message": "SSH Login Attempt",   # ✅ ADDED
-                        "ip": ip,
-                        "status": "FAILED"
-                    }
+            if match:
+                ip = match.group(1)
 
-                    try:
-                        response = requests.post(API_URL, json=data)
-                        print(f"Sent log for IP: {ip}, Response: {response.status_code}")
-                    except Exception as e:
-                        print("Error:", e)
+                # 🔥 Detect status
+                if "Failed password" in line:
+                    status = "FAILED"
+                elif "Accepted password" in line:
+                    status = "SUCCESS"
+                else:
+                    continue   # skip unknown logs
+
+                data = {
+                    "message": "SSH Login Attempt",
+                    "ip": ip,
+                    "status": status
+                }
+
+                try:
+                    response = requests.post(API_URL, json=data)
+                    print(f"Sent log: {ip} → {status}, Response: {response.status_code}")
+                except Exception as e:
+                    print("Error:", e)
 
         last_position = file.tell()
-
 
 if __name__ == "__main__":
     while True:
