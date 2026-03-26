@@ -5,6 +5,7 @@ import Logs from "./Pages/Logs";
 import Alerts from "./Pages/Alerts";
 import Analytics from "./Pages/Analytics";
 import Anomalies from "./pages/Anomalies";
+import Simulator from "./pages/Simulator";
 function App() {
   return (
     <Router>
@@ -15,6 +16,7 @@ function App() {
           <Route path="/alerts" element={<Alerts />} />
           <Route path="/analytics" element={<Analytics />} />
           <Route path="/anomalies" element={<Anomalies />} />
+          <Route path="/simulator" element={<Simulator />} />
         </Routes>
       </Layout>
     </Router>

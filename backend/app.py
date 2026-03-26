@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask, jsonify, request
 from flask_cors import CORS
+import random 
 
 app = Flask(__name__)
 CORS(app)
@@ -157,7 +158,9 @@ def get_anomalies():
         for r in rows
     ])
 
-
+# -------------------------
+# GET Analytics
+# -------------------------
 @app.route("/analytics", methods=["GET"])
 def get_analytics():
     conn = sqlite3.connect(DATABASE)
@@ -198,6 +201,49 @@ def get_analytics():
             {"name": "Success", "value": success}
         ]
     })
+
+# -------------------------
+# GET LOGS
+# -------------------------
+import random
+
+@app.route("/simulate", methods=["POST"])
+def simulate_attack():
+    conn = sqlite3.connect(DATABASE)
+    cursor = conn.cursor()
+
+    ips = ["192.168.1.1", "10.0.0.5", "172.16.0.3"]
+
+    for _ in range(10):  # generate 10 logs
+        ip = random.choice(ips)
+
+        status = random.choice(["SUCCESS", "FAILED"])
+
+        message = "Login success" if status == "SUCCESS" else "Login failed"
+
+        # Insert log
+        cursor.execute(
+            "INSERT INTO logs (message, ip, status) VALUES (?, ?, ?)",
+            (message, ip, status)
+        )
+
+        # 🚨 If failed → anomaly + alert
+        if status == "FAILED":
+            cursor.execute("""
+            INSERT OR REPLACE INTO anomalies (ip, status, risk_level)
+            VALUES (?, ?, ?)
+            """, (ip, status, "HIGH"))
+
+            cursor.execute("""
+            INSERT OR REPLACE INTO alerts (ip, message, severity)
+            VALUES (?, ?, ?)
+            """, (ip, f"Failed login from {ip}", "HIGH"))
+
+    conn.commit()
+    conn.close()
+
+    return {"message": "Attack simulated!"}
+
 # -------------------------
 # RUN APP
 # -------------------------

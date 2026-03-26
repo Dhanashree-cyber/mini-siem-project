@@ -17,8 +17,10 @@ function Logs() {
 
   return (
     <div style={{ padding: "20px" }}>
-      <h2>Logs</h2>
-
+      <h1 className="page-title">📄 Logs</h1>
+      <p className="page-desc">
+        View all collected system logs in real-time
+      </p>
       <table border="1" width="100%" style={{ borderCollapse: "collapse" }}>
         <thead style={{ background: "#0f172a", color: "white" }}>
           <tr>

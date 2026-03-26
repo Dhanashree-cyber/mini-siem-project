@@ -37,12 +37,28 @@ function Dashboard() {
     return <h2 style={{ textAlign: "center" }}>Loading Dashboard...</h2>;
   }
 
-  return (
-    <div className="dashboard-home">
+  const simulateAttack = () => {
+  fetch("http://127.0.0.1:5000/simulate", {
+    method: "POST"
+  })
+    .then(res => res.json())
+    .then(data => {
+      alert("🔥 Attack Simulated!");
+    })
+    .catch(err => console.error(err));
+  };
 
+  return (
+    <div className="section">
+    <div className="dashboard-home">
       {/* Hero Section */}
       <section className="hero-section">
         <h1 className="main-heading">Security Monitoring System</h1>
+
+        <h1 className="page-title">📊 Dashboard</h1>
+        <p className="page-desc">
+          Overview of system logs, alerts, and anomalies in real-time
+        </p>
 
         <div className="table-card" style={{ maxWidth: "900px", margin: "0 auto", padding: "40px" }}>
           <h2>What is a SIEM System?</h2>
@@ -104,7 +120,7 @@ function Dashboard() {
           <p>Visual insights using charts and dashboards.</p>
         </div>
       </div>
-
+  
       {/* Project Overview */}
       <div className="table-row" style={{ marginTop: "60px" }}>
 
@@ -123,7 +139,7 @@ function Dashboard() {
         </div>
 
       </div>
-
+    </div>
     </div>
   );
 }

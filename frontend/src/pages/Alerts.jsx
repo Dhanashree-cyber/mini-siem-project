@@ -16,8 +16,12 @@ function Alerts() {
   }, []);
 
   return (
+    <div classname="section">
     <div style={{ padding: "30px" }}>
-      
+            <h1 className="page-title">🚨 Alerts</h1>
+      <p className="page-desc">
+      High severity security alerts triggered by suspicious activities
+      </p>
       {/* 🔥 Heading */}
       <h1 style={{ 
         fontSize: "32px", 
@@ -26,7 +30,6 @@ function Alerts() {
       }}>
         🚨 Security Alerts
       </h1>
-
       {/* 🔥 Alerts List */}
       {alerts.length === 0 ? (
         <p style={{ fontSize: "18px" }}>No alerts detected</p>
@@ -56,6 +59,7 @@ function Alerts() {
         ))
       )}
 
+    </div>
     </div>
   );
 }

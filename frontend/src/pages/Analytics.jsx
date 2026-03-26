@@ -18,12 +18,17 @@ function Analytics() {
 
   return (
     <div>
-      <h2>📊 Security Analytics</h2>
+      <div classname="section">
+      <h1 className="page-title">📈 Analytics</h1>
+      <p className="page-desc">
+        Visual insights into system activity and security trends
+      </p>
 
       <div className="chart-row">
         <SeverityChart data={data.severity} />
         <LoginChart data={data.failed_ips} />
       </div>
+    </div>
     </div>
   );
 }

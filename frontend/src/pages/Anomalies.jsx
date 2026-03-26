@@ -27,20 +27,15 @@ function Anomalies() {
     return <h2 style={{ textAlign: "center" }}>Loading Anomalies...</h2>;
   }
 
-<td style={{
-  color: a.risk_level === "HIGH" ? "red" : "yellow"
-}}>
-  {a.risk_level}
-</td>
-
-
   return (
+    <div className="section">
+  {/* Your cards / tables / charts */}
     <div className="page-container">
-
-      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
-        ⚠️ Anomaly Detection
-      </h1>
-
+      <h1 className="page-title">⚠️ Anomalies</h1>
+      <p className="page-desc">
+        Detected abnormal behavior and high-risk activities
+      </p>
+      
       {data.length === 0 ? (
         <p style={{ textAlign: "center" }}>No anomalies detected</p>
       ) : (
@@ -70,6 +65,7 @@ function Anomalies() {
         </div>
       )}
 
+    </div>
     </div>
   );
 }

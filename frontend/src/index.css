@@ -245,3 +245,32 @@ tr:hover {
     padding: 30px;
   }
 }
+/* ✅ Page Title */
+.page-title {
+  font-size: 32px;
+  margin-bottom: 20px;
+  color: #38bdf8;
+  text-align: center;
+}
+
+/* ✅ Page Description */
+.page-desc {
+  text-align: center;
+  color: #94a3b8;
+  margin-bottom: 40px;
+}
+
+/* ✅ Section Spacing */
+.section {
+  margin-bottom: 40px;
+}
+
+/* ✅ Card Hover Effect */
+.info-card {
+  transition: all 0.3s ease;
+}
+
+.info-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}

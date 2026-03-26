@@ -16,6 +16,7 @@ function Logs() {
   }, []);
 
   return (
+    <div className="section">
     <div style={{ padding: "30px" }}>
       
       {/* 🔥 Heading like Dashboard */}
@@ -63,6 +64,7 @@ function Logs() {
         </tbody>
       </table>
 
+    </div>
     </div>
   );
 }
