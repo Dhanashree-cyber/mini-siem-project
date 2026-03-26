@@ -1,57 +1,73 @@
 import { useEffect, useState } from "react";
 
 function Anomalies() {
-  const [anomalies, setAnomalies] = useState([]);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const fetchAnomalies = async () => {
-    const res = await fetch("http://127.0.0.1:5000/anomalies");
-    const data = await res.json();
-    setAnomalies(data);
+  const fetchData = () => {
+    fetch("http://127.0.0.1:5000/anomalies")
+      .then(res => res.json())
+      .then(res => {
+        setData(res);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Error:", err);
+        setLoading(false);
+      });
   };
 
   useEffect(() => {
-    fetchAnomalies();
-    const interval = setInterval(fetchAnomalies, 5000);
+    fetchData();
+    const interval = setInterval(fetchData, 5000); // 🔥 auto refresh
     return () => clearInterval(interval);
   }, []);
 
+  if (loading) {
+    return <h2 style={{ textAlign: "center" }}>Loading Anomalies...</h2>;
+  }
+
+<td style={{
+  color: a.risk_level === "HIGH" ? "red" : "yellow"
+}}>
+  {a.risk_level}
+</td>
+
+
   return (
-    <div style={{ padding: "30px" }}>
-      
-      {/* 🔥 Heading */}
-      <h1 style={{ 
-        fontSize: "32px", 
-        marginBottom: "20px", 
-        color: "#f59e0b" 
-      }}>
-        ⚠️ Detected Anomalies
+    <div className="page-container">
+
+      <h1 style={{ textAlign: "center", marginBottom: "20px" }}>
+        ⚠️ Anomaly Detection
       </h1>
 
-      {/* 🔥 Anomaly Cards */}
-      {anomalies.length === 0 ? (
-        <p style={{ fontSize: "18px" }}>No anomalies detected</p>
+      {data.length === 0 ? (
+        <p style={{ textAlign: "center" }}>No anomalies detected</p>
       ) : (
-        anomalies.map((a) => (
-          <div
-            key={a.id}
-            style={{
-              background: "#1f2937",
-              borderLeft: "6px solid orange",
-              padding: "15px",
-              marginBottom: "15px",
-              borderRadius: "8px",
-              fontSize: "18px",
-              color: "#f9fafb",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.2)"
-            }}
-          >
-            <div><strong>IP:</strong> {a.ip}</div>
-            <div><strong>Status:</strong> {a.status}</div>
-            <div style={{ color: "#fbbf24", marginTop: "5px" }}>
-              Risk Level: {a.risk_level}
-            </div>
-          </div>
-        ))
+        <div className="table-card">
+          <table style={{ width: "100%", textAlign: "left" }}>
+            <thead>
+              <tr>
+                <th>IP Address</th>
+                <th>Status</th>
+                <th>Risk Level</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {data.map((a, i) => (
+                <tr key={i}>
+                  <td>{a.ip}</td>
+                  <td>{a.status}</td>
+                  <td style={{ color: "red", fontWeight: "bold" }}>
+                    {a.risk_level}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+
+          </table>
+        </div>
       )}
 
     </div>

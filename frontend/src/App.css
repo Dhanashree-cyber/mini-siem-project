@@ -21,7 +21,7 @@ body {
 }
 
 .header h1 {
-  font-size: 60px;
+  font-size: 42px;
   letter-spacing: 1px;
   margin-bottom: 10px;
 }
@@ -153,13 +153,11 @@ tr:hover {
 }
 
 .chart-card {
-  background: #12243c;
-  padding: 25px;
-  border-radius: 14px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
-  height: 420px;
+  flex: 1;
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .chart-container {

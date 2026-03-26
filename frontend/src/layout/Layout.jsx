@@ -12,11 +12,11 @@ function Layout({ children }) {
           <NavLink to="/logs" className="nav-item">Logs</NavLink>
           <NavLink to="/alerts" className="nav-item">Alerts</NavLink>
           <NavLink to="/analytics" className="nav-item">Analytics</NavLink>
+          <NavLink to="/anomalies" className="nav-item">Anomalies</NavLink>
         </nav>
       </aside>
 
       <main className="main-content">
-    
         {children}
       </main>
 
