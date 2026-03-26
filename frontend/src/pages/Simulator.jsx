@@ -29,7 +29,6 @@ function Simulator() {
       <p className="page-desc">
        Generate simulated cyber attacks to test system detection
       </p>
-    
       {/* Button Section */}
       <div style={{ textAlign: "center", marginBottom: "40px" }}>
         <button

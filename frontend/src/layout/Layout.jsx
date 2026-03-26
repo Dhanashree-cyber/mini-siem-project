@@ -5,7 +5,7 @@ function Layout({ children }) {
     <div className="app-layout">
       
       <aside className="sidebar">
-        <h2 className="logo">Mini SIEM</h2>
+        <h2 className="logo">SIEM</h2>
 
         <nav>
           <NavLink to="/" end className="nav-item">📊 Dashboard</NavLink>
